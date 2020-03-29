@@ -8,6 +8,7 @@ type Args struct {
 }
 
 type Reply struct {
-	A *int
-	B *int
+	A *int32
+	B *int32
+	C *int
 }

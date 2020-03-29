@@ -25,7 +25,7 @@ func (this *NWServer) Test(args *common.Args, reply *common.NationWar_LoginSyncI
 func (this *NWServer) Test2(args *common.Args, reply *common.Reply) (err error) {
 	reply.A = proto.Int32(0)
 	var value int32
-	value = 0
+	value = 1
 	reply.B = proto.Int32(value)
 
 	value2 := 0

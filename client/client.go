@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorpc"
 	"net/rpc"
+	"reflect"
 )
 
 func getRPCClient() (client *rpc.Client, err error) {
@@ -26,11 +27,29 @@ func NWCall(funcName string, args interface{}, reply interface{}) *rpc.Call {
 	//replyCall := <-call.Done
 }
 
+//遍历结构体属性
+func printStruct(in interface{}) {
+	t := reflect.TypeOf(in)
+	v := reflect.ValueOf(in)
+	for i := 0; i < v.NumField(); i++ {
+		if v.Field(i).CanInterface() {
+			fmt.Printf("Name:%s Type:%s Interface:%v tag:%s \n",
+				t.Field(i).Name,
+				t.Field(i).Type,
+				v.Field(i).Interface(),
+				t.Field(i).Tag)
+		}
+	}
+}
+
 func main() {
 
 	args := &common.Args{A: 1, B: 2}
-	reply := &common.Args{}
-	call := NWCall("NWServer.Test", args, reply)
+	//reply := &common.NationWar_LoginSyncInfo{}
+	//call := NWCall("NWServer.Test", args, reply)
+
+	reply := &common.Reply{}
+	call := NWCall("NWServer.Test2", args, reply)
 
 	if call == nil {
 		return
@@ -42,5 +61,6 @@ func main() {
 		return
 	}
 
-	fmt.Printf("args:%#v, reply:%#v\n", args, reply)
+	fmt.Printf("reply:%#v\n", reply)
+	printStruct(*reply)
 }
