@@ -102,11 +102,12 @@ func printStruct(in interface{}) {
 func main() {
 
 	args := &common.Args{A: 1, B: 2}
-	reply := &common.NationWar_LoginSyncInfo{}
-	call := NWCall("NWServer.Test", args, reply)
 
-	//reply := &common.Reply{}
-	//call := NWCall("NWServer.Test2", args, reply)
+	//reply := &common.NationWar_LoginSyncInfo{}
+	//call := NWCall("NWServer.Test", args, reply)
+
+	reply := &common.Reply{}
+	call := NWCall("NWServer.Test2", args, reply)
 
 	if call == nil {
 		return

@@ -11,4 +11,5 @@ type Reply struct {
 	A *int32
 	B *int32
 	C *int
+	D *Args
 }
