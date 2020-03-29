@@ -27,8 +27,7 @@ func NWCall(funcName string, args interface{}, reply interface{}) *rpc.Call {
 	//replyCall := <-call.Done
 }
 
-//遍历结构体属性
-func printStruct(in interface{}) {
+func fillStructField(in interface{}) {
 	t := reflect.TypeOf(in)
 	v := reflect.ValueOf(in)
 	fmt.Println("struct kind", t.Kind())
@@ -38,14 +37,65 @@ func printStruct(in interface{}) {
 	}
 
 	for i := 0; i < v.NumField(); i++ {
-		if v.Field(i).CanInterface() {
-			fmt.Printf("Name:%s Type:%s Interface:%v tag:%s kind:%v\n",
-				t.Field(i).Name,
-				t.Field(i).Type,
-				v.Field(i).Interface(),
-				t.Field(i).Tag)
-
+		typeField := t.Field(i)
+		valueField := v.Field(i)
+		realValue := valueField.Interface()
+		if valueField.CanInterface() && reflect.ValueOf(realValue).IsNil() && reflect.TypeOf(realValue).Kind() == reflect.Ptr {
+			//对结构体的field取类型和数值
+			fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
+			switch reflect.TypeOf(realValue).String() {
+			case "*int32":
+				var value int32
+				valueField.Set(reflect.ValueOf(&value))
+			case "*int64":
+				var value int64
+				valueField.Set(reflect.ValueOf(&value))
+			case "*bool":
+				var value bool
+				valueField.Set(reflect.ValueOf(&value))
+			case "*string":
+				var value string
+				valueField.Set(reflect.ValueOf(&value))
+			}
 		}
+	}
+}
+
+//遍历结构体属性
+func printStruct(in interface{}) {
+	t := reflect.TypeOf(in)
+	v := reflect.ValueOf(in)
+	//fmt.Println("struct kind", t.Kind())
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+		v = v.Elem()
+	}
+
+	for i := 0; i < v.NumField(); i++ {
+		typeField := t.Field(i)
+		valueField := v.Field(i)
+		realValue := valueField.Interface()
+		if valueField.CanInterface() {
+			/*
+				fmt.Printf("Name:%s Type:%s Interface:%v tag:%s \n",
+					typeField.Name,
+					typeField.Type,
+					valueField.Interface(),
+					typeField.Tag)
+			*/
+
+			//对结构体的field取类型和数值
+			fmt.Printf("valueField name:%v type:%v, value:%v, realValueName:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue), reflect.TypeOf(realValue).String())
+		}
+
+		/*
+			switch typeField.Type.Kind() {
+			case reflect.Ptr:
+				fmt.Println("field is ptr")
+			default:
+				fmt.Println("field not ptr")
+			}
+		*/
 	}
 }
 
@@ -69,5 +119,8 @@ func main() {
 	}
 
 	//fmt.Printf("reply:%#v\n", reply)
+	printStruct(reply)
+	fillStructField(reply)
+	println("-------------------------------")
 	printStruct(reply)
 }
