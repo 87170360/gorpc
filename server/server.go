@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	proto "github.com/golang/protobuf/proto"
 	"gorpc"
 	"net"
 	"net/rpc"
@@ -10,13 +11,25 @@ import (
 
 type NWServer int
 
-func (this *NWServer) Test(args *common.Args, reply *common.Reply) (err error) {
-	var value1, value2 int
-	value1 = 1
-	reply.A = &value1
+func (this *NWServer) Test(args *common.Args, reply *common.NationWar_LoginSyncInfo) (err error) {
+	reply.ZoneID = proto.Int32(0)
+	var value int32
+	value = 0
+	reply.ZoneNum = proto.Int32(value)
+	reply.RunState = proto.Int32(1)
 
-	value2 = 0
-	reply.B = &value2
+	fmt.Printf("rpc server func Test, args:%#v, reply%#v\n", args, reply)
+	return
+}
+
+func (this *NWServer) Test2(args *common.Args, reply *common.Reply) (err error) {
+	reply.A = proto.Int32(0)
+	var value int32
+	value = 0
+	reply.B = proto.Int32(value)
+
+	value2 := 0
+	reply.C = &value2
 
 	fmt.Printf("rpc server func Test, args:%#v, reply%#v\n", args, reply)
 	return
