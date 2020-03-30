@@ -28,6 +28,7 @@ func NWCall(funcName string, args interface{}, reply interface{}) *rpc.Call {
 }
 
 func fillStructField(in interface{}) {
+	fmt.Println("fillStructField")
 	t := reflect.TypeOf(in)
 	v := reflect.ValueOf(in)
 	fmt.Println("struct kind", t.Kind())
@@ -43,17 +44,18 @@ func fillStructField(in interface{}) {
 		if valueField.CanInterface() && reflect.ValueOf(realValue).IsNil() && reflect.TypeOf(realValue).Kind() == reflect.Ptr {
 			//对结构体的field取类型和数值
 			fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
-			switch reflect.TypeOf(realValue).String() {
-			case "*int32":
+			ele := reflect.ValueOf(realValue).Elem()
+			switch reflect.TypeOf(ele).Kind() {
+			case reflect.Int32:
 				var value int32
 				valueField.Set(reflect.ValueOf(&value))
-			case "*int64":
+			case reflect.Int64:
 				var value int64
 				valueField.Set(reflect.ValueOf(&value))
-			case "*bool":
+			case reflect.Bool:
 				var value bool
 				valueField.Set(reflect.ValueOf(&value))
-			case "*string":
+			case reflect.String:
 				var value string
 				valueField.Set(reflect.ValueOf(&value))
 			}
