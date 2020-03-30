@@ -43,21 +43,29 @@ func fillStructField(in interface{}) {
 		realValue := valueField.Interface()
 		if valueField.CanInterface() && reflect.ValueOf(realValue).IsNil() && reflect.TypeOf(realValue).Kind() == reflect.Ptr {
 			//对结构体的field取类型和数值
-			fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
-			ele := reflect.ValueOf(realValue).Elem()
-			switch reflect.TypeOf(ele).Kind() {
-			case reflect.Int32:
+			switch reflect.TypeOf(realValue).String() {
+			case "*int":
+				var value int
+				valueField.Set(reflect.ValueOf(&value))
+				fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
+			case "*int32":
 				var value int32
 				valueField.Set(reflect.ValueOf(&value))
-			case reflect.Int64:
+				fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
+				//ptr的zero已经是nil
+				//valueField.Set(reflect.Zero(valueField.Type()))
+			case "*int64":
 				var value int64
 				valueField.Set(reflect.ValueOf(&value))
-			case reflect.Bool:
+				fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
+			case "*bool":
 				var value bool
 				valueField.Set(reflect.ValueOf(&value))
-			case reflect.String:
+				fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
+			case "*string":
 				var value string
 				valueField.Set(reflect.ValueOf(&value))
+				fmt.Printf("valueField name:%v type:%v, value:%v\n", typeField.Name, reflect.TypeOf(realValue), reflect.ValueOf(realValue))
 			}
 		}
 	}
